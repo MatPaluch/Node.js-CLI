@@ -1,8 +1,28 @@
-const fs = require("fs").promises;
-const path = require("path");
-const contactsPath = "./db/contacts.json";
+const contacts = require('./contacts');
+const argv = require("yargs").argv;
 
-fs.readFile("./db/contacts.json").then((data) => {
-  const res = JSON.parse(data);
-  res.map((obj) => console.log(obj.name));
-});
+// TODO: refaktor
+function invokeAction({ action, id, name, email, phone }) {
+  switch (action) {
+    case "list":
+      contacts.listContacts();
+      break;
+
+    case "get":
+      contacts.getContactById(id);
+      break;
+
+    case "add":
+      contacts.addContact(name,email,phone);
+      break;
+
+    case "remove":
+      contacts.removeContact(id);
+      break;
+
+    default:
+      console.warn("\x1B[31m Unknown action type!");
+  }
+}
+
+invokeAction(argv);
